@@ -17,6 +17,10 @@ var (
 	ErrTypeMismatch = errors.New("types do not match")
 	// ErrInvalidChangeType The specified change values are not unsupported
 	ErrInvalidChangeType = errors.New("change type must be one of 'create' or 'delete'")
+	// DefaultTagName is the default name of tag that used for struct filter
+	DefaultTagName = "diff"
+	// DefaultExcludeTagValue is the default value of tag that mark a filed to be ignored
+	DefaultExcludeTagValue = "immutable"
 )
 
 const (
@@ -31,6 +35,7 @@ const (
 // Differ a configurable diff instance
 type Differ struct {
 	TagName             string
+	ExcludeTagValue     string
 	SliceOrdering       bool
 	DisableStructValues bool
 	customValueDiffers  []ValueDiffer
@@ -64,7 +69,8 @@ func Changed(a, b interface{}) bool {
 // Diff returns a changelog of all mutated values from both
 func Diff(a, b interface{}) (Changelog, error) {
 	d := Differ{
-		TagName: "diff",
+		TagName:         DefaultTagName,
+		ExcludeTagValue: DefaultExcludeTagValue,
 	}
 
 	return d.cl, d.diff([]string{}, reflect.ValueOf(a), reflect.ValueOf(b))
@@ -73,7 +79,8 @@ func Diff(a, b interface{}) (Changelog, error) {
 // NewDiffer creates a new configurable diffing object
 func NewDiffer(opts ...func(d *Differ) error) (*Differ, error) {
 	d := Differ{
-		TagName: "diff",
+		TagName:         DefaultTagName,
+		ExcludeTagValue: DefaultExcludeTagValue,
 	}
 
 	for _, opt := range opts {
@@ -91,7 +98,8 @@ func NewDiffer(opts ...func(d *Differ) error) (*Differ, error) {
 // depending on the change type specified
 func StructValues(t string, path []string, s interface{}) (Changelog, error) {
 	d := Differ{
-		TagName: "diff",
+		TagName:         DefaultTagName,
+		ExcludeTagValue: DefaultExcludeTagValue,
 	}
 
 	v := reflect.ValueOf(s)

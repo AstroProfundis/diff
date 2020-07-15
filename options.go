@@ -16,6 +16,14 @@ func TagName(tag string) func(d *Differ) error {
 	}
 }
 
+// ExcludeTagValue sets the tag value to be excluded from differing
+func ExcludeTagValue(value string) func(d *Differ) error {
+	return func(d *Differ) error {
+		d.ExcludeTagValue = value
+		return nil
+	}
+}
+
 // DisableStructValues disables populating a separate change for each item in a struct,
 // where the struct is being compared to a nil value
 func DisableStructValues() func(d *Differ) error {

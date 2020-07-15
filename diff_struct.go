@@ -34,7 +34,7 @@ func (d *Differ) diffStruct(path []string, a, b reflect.Value) error {
 		field := a.Type().Field(i)
 		tname := tagName(d.TagName, field)
 
-		if tname == "-" || hasTagOption(d.TagName, field, "immutable") {
+		if tname == "-" || hasTagOption(d.TagName, field, d.ExcludeTagValue) {
 			continue
 		}
 
